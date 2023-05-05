@@ -1,0 +1,396 @@
+2 - Routing - Маршруты 
+
+    api.php и web.php
+        регестрируются в app\Providers\RouteServiceProvider.php
+            на api.php и web.php накладываются параметры и все действия маршрутов идентичны 
+                web.php используется внутри приложения
+                    например указываем для ссылок login 
+                    страницы сайта и админку
+                api.php используется внешними клиентами, мобильными приложениеями 
+
+    Route::get('/', function(){
+        ruturne view('welcome');
+    });
+
+        Route - фасад
+        get - http запрос 
+        '/' - корень главной страницы
+        function(){ruturne view('welcome');} - это обработчик 
+
+    но лучше создать контроллер и в нём указать код обработчика. 
+    
+    Route::view('/', 'welcome'); 
+
+        в маршрут по которому нужно указать страницу данные лучше не указывать
+    
+
+    Редирект - redirect - направить клиента с одного маршрута на другой 
+
+        Route::redirect('/home', '/');- с пути /home происходит переход на главную страницу welcome 
+
+    Если есть неизвестный url путь можно применить fallback и перенаправить на нужную страницу вместо ошибки 404
+        p.s fallback должен лежать в самом низу маршрутов 
+        Route::fallback(function (){
+            return 'Fallback';
+        });
+
+3 - Controllers - контроллеры
+
+    
+    Создаём через консоль контроллер в app\Http\Controllers\TestController.php
+        команда php artisan make:controller TestController
+    далее импортируем контроллер в routes\web.php
+        use app\Http\Controllers\TestController;
+    создаём маршрут в routes\web.php
+        Route::get('test', TestController::class);
+    если в строке браузера ввести /test, выполнится действие по классу TestController
+        например:
+            class TestController extends Controller{
+                public function ___invoke() - по умолчанию
+                    {
+                        return 'test';
+                    }
+            }
+
+    данные БД также называеют ресурсами 
+        crud (create, read, update, delete) - аббревиатура обозначающая единсвеные действия которые можно совершать, 
+            создавать, читать, добавлять, удалять. 
+        https://laravel.com/docs/10.x/controllers#resource-controllers
+
+        Путь ресурса принято писать во множественном числе
+        Класс в контроллерах принято писать в единсвенном числе
+
+        Один контроллер создается на один ресурс
+
+        методы 
+            GET - получить
+            POST - создать
+            
+        Правила и действия, выполняемые контроллером ресурсов
+            Verb	    URI	                        Action	  Route Name
+            метод	    путь	                    действие  маршрут имя
+
+            GET	        /photos	                    index	  photos.index - получить список фотографий на сайте
+            GET	        /photos/create	            create	  photos.create - создать фотографии
+            POST        /photos	                    store	  photos.store - создать пост 
+            GET	        /photos/{photo id}	        show	  photos.show - просмотр одной фотографии
+            GET	        /photos/{photo id}/edit	    edit	  photos.edit - страница редактирования поста
+            PUT/PATCH	/photos/{photo id}	        update	  photos.update - обновить
+            DELETE	    /photos/{photo id}	        destroy	  photos.destroy - удалить
+
+        
+    
+        Создаём через консоль контроллер в app\Http\Controllers\PostController.php
+            команда php artisan make:controller PostController
+        Далее импортируем контроллер в routes\web.php
+            use app\Http\Controllers\PostController;
+
+        создаем маршруты контроллера PostController в routes\web.php
+            Route::get('posts', [PostController::class, 'index'])->name('posts.index'); - получить список
+            Route::get('posts/create', [PostController::class, 'create'])->name('posts.create'); - создать пост
+            Route::post('posts/store', [PostController::class, 'store'])->name('posts.store'); - сохранить пост
+            Route::get('/photos/{post}', [PostController::class, 'show'])->name('posts.show'); - показать пост
+            Route::get('/photos/{post}/edit', [PostController::class, 'edit'])->name('posts.edit'); - редактирование
+            Route::put('/photos/{post}', [PostController::class, 'update'])->name('posts.update'); - обновить
+            Route::delete('/photos/{post}', [PostController::class, 'destroy'])->name('posts.destroy'); - удалить
+            Route::post('/photos/{post}/like', [PostController::class, 'like'])->name('posts.like');
+
+        в app\Http\Controllers\PostController.php создаем методы
+
+            class PostController extends Controller
+            {
+                public function index(){
+                    return 'страница список постов'
+                }
+                      
+                public function create(){
+                    return 'страница создания поста'
+                }
+                        
+                public function store(){
+                    return 'запрос создания поста'
+                }
+        
+                public function show(){
+                    return 'страница просмотра поста'
+                }
+                        
+                public function edit(){
+                    return 'страница изменения поста'
+                }
+                       
+                public function update(){
+                    return 'запрос изменения поста'
+                }
+            
+                public function delete(){
+                    return 'запрос удаления поста'
+                }
+            }
+
+        кастомный метод
+
+            class PostController extends Controller
+            {
+                public function like(){
+                    return 'like + 1'
+                }
+            }
+
+    для обычных ресурсов указанных и кроме кастомных можно использовать, это тоже самое
+
+        Route::resource('posts', PostController::class);
+
+    Можно исключить ненужные метод 
+
+        Route::resource('posts', PostController::class)->only(['index', 'show']);
+
+    можно создать контроллер в котором уже будут прописанны базовые методы resource с помощью команды
+        php artisan make:controller PostController --resource
+
+    показывает все зареганные маршруты    
+        php artisan route:list
+
+    как получить пост по id
+
+        public function show($id){
+                    return 'страница просмотра поста {$id}';
+                }
+        на странице получиться  
+            страница просмотра поста 'число id введеное в url или из БД' 
+    
+    можно группировать маршруты
+
+        Route::prefix('user')->as('user.')->group(function () {
+
+            Route::get('posts', [PostController::class, 'index'])->name('posts.index'); 
+            Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
+
+        });
+
+        префикс будет присваиваться ко всем названиям с приставкой user
+
+    если кабинет пользователя большой, то можно вынести его в отдельный файл.
+        для этого в routes/ создаем файл например user.php и заносим в него группу маршрутов.
+            далее в app\Providers\RouteServiceProvider.php передаём 
+
+                 Route::middleware('web')
+
+                    ->namespace($this->namespace)
+
+                    ->group(function(){ - функция обратного вызова
+
+                        require_once base_path('routes/web.php');
+
+                        require_once base_path('routes/user.php');
+                    });
+    
+    дополнительные команды консоли для работы с маршрутами
+        существование маршрута     
+            Route::has('name')
+                true/false
+        существование пути или проверка активной ссылки
+            Route::is('/posts*')
+        команда в консоли для кэширования. Предназначена для увелечение скорости работы
+            php artisan route:cashe
+        для того чтобы очистить кэш
+            php artisan route:clear
+        страница входит/выходит в режим обслуживания
+            php artisan down
+            php artisan up
+
+
+4 - middleware - промежуточное ПО - посредник, фильтр, проверки, защита
+    берет запрос, видоизменяет его, записывает логи и тд
+        по пути Http\Middleware\ 
+            Authenticate.php - аунтифицирован пользователь или нет, возвращает на исходную страницу
+            EncryptCookies.php - расшифровывает и зашифровывает cookies
+            PreventRequestsDuringMaintenance.php - определяет находится ли данное приложение в режиме обслуживания или нет
+            RedirectIfAuthenticated.php - аунтифицирован пользователь или нет, возвращает на страницу аккаунта
+            TrimStrings.php - обрезает ненужные параметры и элементы в запросе
+            TrustHosts.php - настройка хостов с которым будет взаимодействовать приложение 
+            CTrustProxies.php - сервер балансировщик, горизонтальное маштабирование
+            ValidateSignature.php - 
+            VerifyCsrfToken.php - обеспечивает защиту от CSRF атаки. Подделка межсайтовых запросов.
+
+        создание middleware, который попадает в каталог app\Http\Middleware
+            php artisan make:middleware name
+        
+        пример:
+            создаём logmiddleware.php, он логирует запросы
+                class logMiddleware
+                    {
+                        
+                        public function handle(Request $request, Closure $next): Response
+                        {
+                            
+                            info('запрос', ['foo' => 'bar']); - записывает в логи запрос в котором присудсвует данный массив
+
+                            return $next($request);
+                        }
+                    }
+                info() - использует запросы и логирует их
+
+            далее нужно зарегестрировать logmiddleware.php
+                1 способ
+                    зарегестрировать его в маршрутах в файле routes\web.php
+                        Route::get('/test', TestController::class)->name('test')->middleware(logmiddleware::class);
+                            указывает что такой-то middleware нужно использовать для вот такого вот routes
+                    в storage\logs\laravel.log находятся логи
+                        local.INFO: Запрос {"foo":"bar"} 
+
+    info()          позволяет вызвать массив всех параметров запроса 
+                        info('запрос', $request->all());
+                    позволяет вызвать все url запросы
+                        info($request->url(), $request->all());
+                2 способ
+                    в файле app\Http\Kernel.php регестрируются все middleware
+                        protected $middleware - срабатывают глобально
+                            protected $middleware = [
+                                \App\Http\Middleware\logmiddleware::class,
+                            ]
+                                теперь будет автоматически применяться для всего приложения
+
+                        protected $middlewareGroups - объеденяет middleware в группы. 
+                            По названию группы потом применяется все middleware
+                                Route::middleware('guest')->group(function(){
+                                    группа маршрутов к которому будет применет middleware guest
+                                    маршрут->withoutMiddleware('guest'); - этот метод будет исключать 
+                                });
+
+                        protected $middlewareAliases - название отдельного middleware.
+                            Применяется для сокращения в маршрутах, без импортирования
+                            Включает в себя также middleware по умолчанию в коробке
+
+                                protected $middlewareAliases = [
+                                    'log' => \App\Http\Middleware\logmiddleware::class
+                                ]
+                            а в маршрутах 
+                                Route::get('/test', TestController::class)->name('test')->middleware('log');
+
+
+        $middlewareAliases - 'guest'
+            Проверяет что пользователь гость, он не вошёл в аккаунт
+                Route::get('login', LoginController::class, 'index')->name('login')->middleware('guest');
+                Route::post('login', LoginController::class, 'store')->name('login.store')->middleware('guest');
+            в 'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+                происходит редирект на главную страницу
+                    return redirect(RouteServiceProvider::HOME);
+                но лучше редирект по маршруту user
+                    return redirect()->route('user') 
+                        а в routes\user.php в группе user создать   
+                            Route::redirect('/user', '/user/posts')->name('user');
+
+        $middlewareAliases - 'auth' - аунтифицированый пользователь может пройти по маршруту
+
+        создаем middleware который будет проверять заблокированного пользователя
+            создаём кастомный ActiveMiddleware в $middlewareAliases
+        внутри ActiveMiddleware создаём проверку 
+
+            public function handle(request $request, Closure $next)
+            {
+                if($this->isActive($request)){
+                    return $next($request);
+                }
+
+                abort(403); - программа прекратит действия и вернёт заблокированную страницу с кодом ошибки 403
+            }
+            
+            protected function isActive(Request $request)
+                {
+                    "$user = $request->user(); 
+                    return $user->active;" - если есть пользователь и БД
+
+                    ruturne false;
+                }
+        Role - Роли ->middleware('role:writer'); - как получить это значение
+            создаем 
+                php artisan make:middleware TokenMiddleware 
+                    определяет что в запросе есть определеный секретный ключ
+                $token = 'secret';
+                if ($request->imput('token') === $token) { - если параметр запроса равен $token, то можно пройти далее
+                    return $next($request);
+                } 
+                abort(403);
+                    input - один параметр
+                    all - все параметры
+
+            middleware можно регистрировать в контролерах 
+                в TestController
+                    public function __construct(){
+                        $this->middleware('token'); - нам нужен middleware 'token'
+                    }
+                если дописать 
+                    $this->middleware('token')->only('index'); - только для index
+                    $this->middleware('token')->except('index'); - исключить
+                для того чтобы пройти на страницу, нужно использовать ключ 'secret'
+                    /test?token=secret - middleware пропускает на страницу
+                правильние хранить токены так:
+                    в TokenMiddleware
+                        $token = env('TOKEN');
+                    в файле env()
+                        TOKEN=secret
+                или если env будет кэшироваться то
+                    в TokenMiddleware
+                        $token = config('example.token');
+                А если мы хотим просто получить ->middleware('role:writer'); то 
+                    в TokenMiddleware
+                        public function handle(Request $request, Closure $next, string $token) - нужно указать что $token строка
+                        {
+                            $token = 'write';
+                        }
+    dd($foo);   - глобальная функция dd позволяет вернуть то значение, что мы в неё передаём
+                    dd($request) - очень полезная функция.  
+                        можно вернуть запрос целиком для дебага или просмотра
+                        dd() возвращает код и останавливает программу
+                        dump() - тоже самое что и dd, но продолжает код 
+
+    abort(404); - not found
+    abort(500); - server error
+    abort_if(false, 500); - принимает два параметра значение и код ошибки - как условие является
+    abort_if($user->admin, 500); - не является
+
+    Группы middleware - регистрируются в RouteServiceProvider
+    web = {
+        EncryptCookies - шифрование cookies
+        AddQueuedCookiesToResponse - добавляются cookies в ответ
+        StartSession - начинает сессию
+        ShareErrorsFromSession - ошибки валидации
+        VerifyCsrfToken - проверяет CRSF токен
+        SubstituteBindings - регестрирует привязки
+    }
+
+    api = {
+       SubstituteBindings - регестрирует привязки 
+       'throttle:api', - это алиас, он нужен чтобы ограничивать 
+            колличество запросов на промежуток времени для одного пользователя
+                регестрируется в RouteServiceProvider в самом низу
+                    configureRateLimiting() - в этой функции создаётся лимит
+    }
+        
+
+    
+
+
+                
+                    
+
+
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
