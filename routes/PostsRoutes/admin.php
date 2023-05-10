@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 //контроллеры
 use App\Http\Controllers\Posts\AdminController;
 
-Route::prefix('admin')->middleware('auth','active', 'admin')->group(function(){
+Route::prefix('admin')->middleware('auth','active','admin')->group(function(){
     Route::redirect('/', '/admin/posts')->name('admin');
 
     Route::get('posts', [AdminController::class, 'index'])->name('admin.posts'); //получить

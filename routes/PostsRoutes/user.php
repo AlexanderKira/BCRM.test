@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 //контроллеры
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\CommentController;
+use App\Http\Controllers\TestController;
+use App\Http\Middleware\LogMiddleware;
 
-Route::prefix('user')->middleware('auth','active')->group(function(){
+
+
+Route::prefix('user')->middleware('active')->group(function(){
     Route::redirect('/', '/user/posts')->name('user');
 
     Route::get('posts', [PostController::class, 'index'])->name('user.posts'); //получить
@@ -21,4 +25,5 @@ Route::prefix('user')->middleware('auth','active')->group(function(){
 });
 
     Route::resource('posts/{post}/comments', CommentController::class);//все ресурсы для комментария
+    Route::get('test', TestController::class)->name('test');
 ?>
