@@ -9,14 +9,18 @@ class ActiveMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (true) {
+        if ($this->isActive($request)) {
             return $next($request);
         }
 
         abort(403);
     }
 
-    protected function isActive(Request $request){
-        return true;
+    protected function isActive(Request $request)
+    {
+        //$user = $request->user();
+        // return $user->active;
+
+        return true; //заблокирован пользователь или нет
     }
 }

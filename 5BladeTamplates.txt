@@ -1,0 +1,44 @@
+Blade Tamplates - 
+    название каталогов берутся из названия маршрутов 
+для того чтобы blade заработал в названии также нужно написать 
+    в resources\views\home создаем файл index.blade.php
+        в файле маршрутов routes\web.php создаем маршрут
+            Route::view('/', 'home.index')-.name('home');
+    в файле index.blade.php создаётся html код
+        в body можно использовать директивы
+            <body>
+                @php($foo = 'bar'); - внутри директивы пишем php код 
+                @php
+                    $foo = 'bar' - второй вариант синтаксиса
+                @endphp - закрывающая директива
+            </body>
+
+        циклы 
+            foreach 
+                @foreach([1,2,3] as $value)
+                    {{ $value }} - {{}} - интерполяция 
+                @endforeach
+            for
+                @for($i = 0; $i<10; $i++)
+                    {{$i}} - 10 итераций
+                @endfor
+
+        {{}} - внутри можно писать php код 
+                htmlspecialchars - автоматически очищает html код от тегов для защиты от XSS атак
+            {!!$value!!} - выведит значение как есть
+            @{{}} - указвает blade игнорировать 
+        
+        @json() - переводит в формат json
+            @json({'foo'=>'bar'})
+                вывод -> {"foo":"bar"}
+
+            <script>
+                window.App = @json(['locale' => config('app.locale')]) - applocale - 'en' вывод языка проекта
+            </script>
+                преобразовывает php массивы в json
+
+        @yield('content') - вывод содержимого с текстом 
+        @extends('layout') - позволяет вывести значение 
+            выводит значение layout, например как содержимое страницы и её html шаблон
+
+

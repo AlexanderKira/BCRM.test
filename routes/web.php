@@ -7,6 +7,6 @@ use App\Http\Controllers\Posts\CommentController;
 use App\Http\Controllers\Posts\PostController;
 //маршруты
 
-Route::view('/', 'welcome'); //главная страница
+Route::view('/', 'home.index'); //главная страница
 Route::redirect('/home', '/'); //переадресация 
 
