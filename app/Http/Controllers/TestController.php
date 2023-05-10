@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 class TestController extends Controller
 {
     
-    public function index(){
-        return 'страница список тестов';
-    }
+        public function __invoke()
+            {
+                return 'test';
+            }
     
 }
