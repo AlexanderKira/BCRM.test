@@ -6,8 +6,6 @@ use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\CommentController;
 use App\Http\Controllers\TestController;
 
-
-
 Route::prefix('user')->middleware('active')->group(function(){
     Route::redirect('/', '/user/posts')->name('user');
 

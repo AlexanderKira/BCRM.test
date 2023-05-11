@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Posts\LoginController;
 use App\Http\Controllers\Posts\RegisterController;
 
-
 Route::middleware('guest')->group(function(){
     Route::get('register', [RegisterController::class, 'index'])->name('register');
     Route::post('register', [RegisterController::class, 'store'])->name('register.store');
