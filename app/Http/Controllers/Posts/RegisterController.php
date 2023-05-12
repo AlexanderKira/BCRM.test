@@ -9,7 +9,7 @@ class RegisterController extends Controller
 {
     public function index()
     {
-        return 'это регистрация'; 
+        return view('register.index'); 
     }
      
 }

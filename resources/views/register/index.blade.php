@@ -1,10 +1,9 @@
 @extends('layouts.base')
 @section('page.title')
-    главная страница
+    Регистрация пользователя
 @endsection
 @section('content')
     <h1>
-        Главная страница
+        Регистрация
     </h1>
 @endsection
-
