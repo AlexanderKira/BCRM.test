@@ -8,11 +8,26 @@ use Illuminate\Http\Request;
 class BlogController extends Controller
 {
     public function index(){
-        return 'Посты в блоге';
+
+        $post = (object) [
+            'id' => 123,
+            'title' => 'texttext',
+            'content' => 'texttexttexttext',
+        ];
+
+        $posts = array_fill(0, 10, $post);
+
+        return view('blog.index', compact('posts'));
     }
 
     public function show($post){
-        return 'Один пост в блоге';
+        $post = (object) [
+            'id' => 123,
+            'title' => 'texttext',
+            'content' => 'texttexttexttext',
+        ];
+
+        return view('blog.show', compact('post'));
     }
 
     public function like($post){

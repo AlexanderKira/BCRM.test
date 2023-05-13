@@ -8,7 +8,7 @@ class PostController extends Controller
 {
         
                 public function index(){
-                    return 'страница список постов';
+                    return view('home.index');
                 }
                       
                 public function create(){

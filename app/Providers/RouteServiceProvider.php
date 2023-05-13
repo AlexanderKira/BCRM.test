@@ -44,6 +44,8 @@ class RouteServiceProvider extends ServiceProvider
 
                     require_once base_path('routes/PostsRoutes/register.php');
 
+                    require_once base_path('routes/PostsRoutes/blog.php');
+
 
                 });
                 
