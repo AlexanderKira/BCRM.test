@@ -141,7 +141,9 @@ Blade Tamplates -
             © {{config('app.name')}}{{date('Y')}} - знак копирайта NumLock - ALT+0169
         а как создать и расшарить свою переменную
             в app\Providers\AppServiceProvider.php
-                в метаде boot
+                подключаем фасад View
+                    use Illuminate\Support\Facades\View;
+                в методе boot - метод работает после того как все сервисы уже зарегистрированы
                      public function boot()
                         {
                             view()::share('date', '2022');
