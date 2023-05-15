@@ -4,4 +4,98 @@
             Laravel находит для них переводы
                 в каталоге \lang\en создаются 
 
+Свойство переменной $slot и файлов components 
+    в каталоге resources\views\components\card.blade.php
+        <div class="card">  
+            {{$slot}}
+        </div>
+            этот тег будет классифицировать компонент основной странице.
+    в каталоге resources\views\login\index.blade.php 
+        <x-card-header>                                    
+            <h4 class="m-0">
+                {{__('Вход')}}
+            </h4>
+        </x-card-header>
+            в такой тег помещается контент и он может применятся на все вложенное. 
+                название тега будет зависить от файла в котором реализована классификация
+                    это позволяет создать как бы уникальные теги со своими свойствами
+ 
+маршрут для формы 
+    в каталоге resources\views\login\index.blade.php 
+        <form action="{{route('login.store')}}" method="POST"> 
+            фиксируется название маршрута и метод
+
+    как передать атрибуты 
+        в каталоге resources\views\components\form.blade.php
+            <form {{$attributes}}>
+                {{$slot}}
+            </form>
+                таким образом форма из файла \login\index.blade.php будет классифицироватся в \components\form.blade.php
+
+как передать параметры атрибута
+    в каталоге resources\views\components\label.blade.php
+        @props(['required' => false]) - создаём реквизит в переменной, по умолчанию false
+
+            если передать required в любой тег <label required>, 
+                то так у required появляется положение true или false. 
+                    таким образом можно динамически присваивать параметр атрибуту
+
+        так как $attributes это объект, то у него есть методы атрибута
+            метод атрибута class позволяет передавать параметры компонентов 
+                <label {{$attributes->class([
+                    ($required ? 'required' : ''), - если required, если нет, то '' ничего не передается.
+                ]) }}>
+                    {{$slot}}
+                </label>
+        
+        можно добавлять также атрибуты с помощью слияния
+            <input {{$attributes->class([
+                'form-control', - любой параметр компонента
+            ])->merge([ - позволяет производить слияние
+                'type' => 'text', - атрибут и его параметр
+            ]) }} 
+
+Каждую функцию страницы можно для удобства переопределить в отедльный файл и удобным способом добавлять в проекте готовые элементы
+    для этого создадим в каталоге resources\views\components\checkbox.blade.php
+        <div class="form-check">
+            
+            <input {{$attributes->merge([ - обращается к атрибуту value
+                'value' => 1,
+            ])}} type="checkbox" id="remember" class="form-check-input">
+                <label class="form-check-label" for="remember">
+                    {{__($slot)}} - это переменная определяется каждому элементу страницы
+                </label>
+        </div>
+
+            это настройки checkbox, в кторорых 
+                name="remember" - будет присваиваться каждый раз
+                value всегда по умолчанию '1' и переопределяется в ручную
+
+    в каталоге resources\views\login\index.blade.php
+        <x-checkbox name="remember">
+            {{--('Запомнить меня')}}
+        </x-checkbox>
+    
+    если создавать еще подобные элементы, то будут кофликтовать атрибуты for="remember" и id="remember".
+        что-бы этого избежать, нужно сгенерировать уникальный индефикатор для каждого элемента
+            в каталоге resources\views\components\checkbox.blade.php пишем строчку
+                @php($id = Str::uuid()) 
+                    а в атрибутах указывает 
+                        id="{{$id}}" for="{{$id}}">
+                            что позваляет присваивать им уникальные id и прервать их конфликт
+пример с кнопкой 
+    @props(['color' => 'primary']) - значение цвета кноки по умолчанию
+
+    <button {{$attributes->class([
+        'btn btn-{$color}', - в переменую передается указаное значение 
+    ])->merge([
+        'type' => 'button',
+    ]) }}>
+        {{$slot}}
+    </button>
+        если указать класс стиля кнопки red - цвет красный
+        если не указывать стиль - цвет поумолчанию останется синим
+                    
+
+
 
