@@ -15,31 +15,28 @@
                                 </x-card-title>                                        
                             </x-card-header>
                             <x-card-body>                               
-                                    <form action="{{route('login.store')}}" method="POST">
+                                    <x-form action="{{route('login.store')}}" method="POST">
 
-                                        <div class="mb-3">
-                                            <label class="required">{{__('Email')}}</label>
-                                            <input type="email" name="email" class="form-control" autofocus>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="required">{{__('Пароль')}}</label>
-                                            <input type="password" name="password" class="form-control">
-                                        </div>
+                                        <x-form-item>
+                                            <x-label required>{{__('Email')}}</x-label>
+                                            <x-input type="email" name="email" autofocus />
+                                        </x-form-item>
+
+                                        <x-form-item>
+                                            <x-label required>{{__('Пароль')}}</x-label>
+                                            <x-input type="password" name="password" />
+                                        </x-form-item>
         
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input name="remember" type="checkbox" value="" id="remember" class="form-check-input">
+                                        <x-form-item>
+                                           <x-checkbox>
+                                                {{__('Запомнить меня')}}
+                                           </x-checkbox>
+                                        </x-form-item>
         
-                                                <label class="form-check-label" for="remember">
-                                                    {{__('Запомнить меня')}}
-                                                </label>
-                                              </div>
-                                        </div>
-        
-                                        <button type="submit" class="btn btn-primary">
+                                        <x-button type="submit">
                                             {{__("Войти")}}
-                                        </button>
-                                    </form>
+                                        </x-button>
+                                    </x-form>
                             </x-card-body>
                             
                             </div>
