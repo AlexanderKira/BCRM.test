@@ -83,7 +83,7 @@
                     а в атрибутах указывает 
                         id="{{$id}}" for="{{$id}}">
                             что позваляет присваивать им уникальные id и прервать их конфликт
-пример с кнопкой 
+Пример с кнопкой 
     @props(['color' => 'primary']) - значение цвета кноки по умолчанию
 
     <button {{$attributes->class([
@@ -95,7 +95,58 @@
     </button>
         если указать класс стиля кнопки red - цвет красный
         если не указывать стиль - цвет поумолчанию останется синим
-                    
+
+
+Как передать ссылкам атрибут active, который выделяет название выбраной страницы
+
+    1 способ с помощью фасада Route
+        в каталоге resources\views\includes\header.blade.php
+            к ссылкам 
+                <a href="{{route('user')}}" class="nav-link {{Route::is('user') ? 'active' : ''}}" aria-current="page">
+                    {{__('Главная')}}
+                </a>
+                    "{Route::is('user') ? 'active' : ''}}" - если маршрут идёт через user, класс <a> выделяет текст, если нет, ничего не происходит
+                        нужно учитывать все маршруты которые нужно выделить при выборе
+    2 способ с помощью функции
+        создаём файл в каталоге \app\helpers.php
+            создаём функцию 
+                if (! function_exists('active_link')){ 
+                        //if(!) предотвращает повтора названия функции
+                    function active_link(string $name, $active='active'): string
+                    {
+                        return Route::is($name) ? $active : '';
+                    }
+                }
+        в файле composer.json регестрируем файл 
+            в массиве "autoload"
+                "files": [
+                    "app/helpers.php"
+                ]
+        в терминале пишем  
+            composer dump
+                ждём ответа Generating optimized autoload files
+        в каталоге \resources\views\includes\header.blade.php
+            <a href="{{route('login')}}" class="nav-link {{active_link('login')}}" aria-current="page">
+                {{__('Вход')}}
+            </a>
+                где {{active_link('login')}} маршрут и адрес нашей функции 
+
+csrf_token предотвращает подмену страницы при переходе через форму <form> 
+    1 способ
+        в resources\views\register\index.blade.php
+            <x-form action="{{route('register.store')}}" method="POST">
+                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                ...
+            </x-form>
+    2 способ
+        для всех форм создать csrf_token
+            в resources\views\components\form.blade.php
+                <form {{$attributes}}>
+                    @csrf - добавляет csrf_token
+                    {{$slot}}
+                </form>
+
+
 
 
 

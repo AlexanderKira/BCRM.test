@@ -1,19 +1,19 @@
-@extends('layouts.base')
+@extends('layouts.auth')
 @section('page.title')
     Страница входа
 @endsection
-@section('content')
-    <section>    
-        <x-container>
-            <div class="row">
-                <div class="col-12 col-md-6 offset-md-3">
+@section("auth.content")
                     <x-card>
-                        <div class="card">
-                            <x-card-header> 
-                                <x-card-title>
-                                    {{__('Вход')}}
-                                </x-card-title>                                        
-                            </x-card-header>
+                        <x-card-header> 
+                            <x-card-title>
+                                {{__('Вход')}}
+                            </x-card-title> 
+                            <x-slot name="right">
+                                <a href="{{route('register')}}">
+                                    {{__('Регистрация')}}
+                                </a>
+                            </x-slot>
+                        </x-card-header>
                             <x-card-body>                               
                                     <x-form action="{{route('login.store')}}" method="POST">
 
@@ -34,18 +34,12 @@
                                         </x-form-item>
         
                                         <x-button type="submit">
-                                            {{__("Войти")}}
+                                            {{__('Войти')}}
                                         </x-button>
                                     </x-form>
                             </x-card-body>
-                            
-                            </div>
-    
-                        </div>
                     </x-card>
-                </div>
-            </div>    
-        </x-container>    
-    </section>
 @endsection
+
+
     
