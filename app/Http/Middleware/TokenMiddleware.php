@@ -7,13 +7,18 @@ use Illuminate\Http\Request;
 
 class TokenMiddleware
 {
-    public function handle(Request $request, Closure $next)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next, string $token)
     {
-        $token = 'secret';
-
-        if ($request->imput('token')=== $token) {
+        if ($request->input('token') === $token) {
             return $next($request);
-        } 
+        }
 
         abort(403);
     }

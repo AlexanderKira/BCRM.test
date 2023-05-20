@@ -1,10 +1,9 @@
-@extends('layouts.base')
-@section('page.title')
-    главная страница
-@endsection
-@section('content')
-    <h1>
-        Главная страница
-    </h1>
-@endsection
+@extends('layouts.main')
 
+@section('main.content')
+    <div class="text-center">
+        <h1>
+            Главная страница
+        </h1>
+    </div>
+@endsection

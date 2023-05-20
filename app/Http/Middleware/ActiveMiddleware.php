@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class ActiveMiddleware
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
         if ($this->isActive($request)) {
@@ -18,9 +25,6 @@ class ActiveMiddleware
 
     protected function isActive(Request $request)
     {
-        //$user = $request->user();
-        // return $user->active;
-
-        return true; //заблокирован пользователь или нет
+        return false;
     }
 }

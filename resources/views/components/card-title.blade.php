@@ -1,3 +1,3 @@
 <h4 class="m-0">
-    {{$slot}}
+    {{ $slot }}
 </h4>

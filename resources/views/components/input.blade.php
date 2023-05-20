@@ -2,5 +2,4 @@
     'form-control',
 ])->merge([
     'type' => 'text',
-])}}>
-    {{$slot}}
+]) }}>

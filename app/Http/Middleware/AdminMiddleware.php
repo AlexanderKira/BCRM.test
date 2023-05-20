@@ -3,10 +3,18 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
 class AdminMiddleware
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
         if ($this->isAdmin($request)) {
@@ -18,9 +26,6 @@ class AdminMiddleware
 
     protected function isAdmin(Request $request)
     {
-        //$user = $request->user();
-        // return $user->active;
-
-        return false; //заблокирован пользователь или нет
+        return false;
     }
 }
